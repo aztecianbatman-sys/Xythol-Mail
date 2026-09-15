@@ -1,0 +1,1 @@
+Xythol Mail 0.1.0 Demo build branch. This file intentionally exists to trigger the Windows release workflow after the release branch was created.
