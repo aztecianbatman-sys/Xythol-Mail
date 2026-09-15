@@ -5,6 +5,9 @@ on:
       - main
       - "release/**"
   workflow_dispatch:
+concurrency:
+  group: xythol-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
@@ -19,6 +22,8 @@ jobs:
           node-version: 22
       - name: Install dependencies
         run: npm install
+      - name: Type check
+        run: npm run typecheck
       - name: Build renderer
         run: npm run build
       - name: Run tests
