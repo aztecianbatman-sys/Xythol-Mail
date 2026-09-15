@@ -24,7 +24,7 @@ jobs:
       - name: Run tests
         run: npm test
       - name: Build Windows installer
-        run: npx electron-builder --win nsis
+        run: npx electron-builder --win nsis --publish never
       - name: Create GitHub release
         if: startsWith(github.ref, 'refs/heads/release/')
         shell: bash
