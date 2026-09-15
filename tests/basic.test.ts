@@ -1,0 +1,2 @@
+import {describe,expect,it} from "vitest";
+describe("basic project checks",()=>{it("uses the expected Electron version",async()=>{const p=await import("../package.json");expect(p.default.devDependencies.electron).toBe("37.2.6")});it("keeps the repo branded correctly",()=>expect("Xythol Mail").toBe("Xythol Mail"))});
