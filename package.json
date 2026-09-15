@@ -55,10 +55,7 @@
       "oneClick": false,
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true,
-      "installerIcon": "assets/branding/app-icon.png",
-      "uninstallerIcon": "assets/branding/app-icon.png"
-    },
-    "icon": "assets/branding/app-icon.png"
+      "createDesktopShortcut": true
+    }
   }
 }
