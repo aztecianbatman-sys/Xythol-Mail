@@ -1,18 +1,36 @@
-name: build-windows
+name: Xythol Mail demo release
 on:
   push:
-    branches: [main]
+    branches:
+      - "release/**"
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Check out
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-      - run: npm install
-      - run: npm run build
-      - run: npm test
-      - run: npx electron-builder --win
+      - name: Install dependencies
+        run: npm install
+      - name: Build renderer
+        run: npm run build
+      - name: Run tests
+        run: npm test
+      - name: Build Windows installer
+        run: npx electron-builder --win nsis
+      - name: Create GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create v0.1.0-demo release/*.exe release/*.blockmap \
+            --title "Xythol Mail 0.1 Demo" \
+            --notes-file RELEASE_NOTES.md \
+            --prerelease \
+            --target "${GITHUB_SHA}"
