@@ -1,0 +1,16 @@
+name: remove old demo release
+on:
+  push:
+    paths:
+      - ".github/workflows/remove-old-demo-release.yml"
+permissions:
+  contents: write
+jobs:
+  cleanup:
+    if: github.event.head_commit.message == 'Remove old v0.1 demo release'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete old GitHub release and tag
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release delete v0.1.0-demo --repo ${{ github.repository }} --cleanup-tag --yes
