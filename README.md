@@ -8,7 +8,7 @@ It is built with Electron 37.2.6, React, TypeScript, Vite and Supabase. The brow
 
 ## What is actually in this repo
 
-The current public build includes a real Electron shell, a secure preload boundary, a Chromium research browser, a real Supabase Auth flow, a Supabase/Postgres migration with ownership-based RLS, local draft persistence, research/contacts data screens, a working SMTP send path, a global Ctrl+K command palette, privacy/settings screens, and the Xythol brand assets.
+The current public build includes a real Electron shell, a secure preload boundary, a Chromium research browser, Supabase anonymous authentication, a Supabase/Postgres schema with ownership-based RLS, local draft persistence, research/contacts data screens, a working SMTP send path, a global Ctrl+K command palette, privacy/settings screens, and the Xythol brand assets. Users can create a name-based Xythol identity without giving the app a real email address or password.
 
 There are intentionally no pretend mailbox rows. Inbox/Sent/Starred/etc. stay empty until a real mailbox provider is configured.
 
@@ -35,6 +35,16 @@ For a production build:
 For a Windows installer:
 
     npm run package:win
+
+## Anonymous accounts
+
+Xythol uses Supabase Anonymous Sign-Ins for its no-email account flow. In the Supabase dashboard, enable the Anonymous provider under Authentication > Providers before testing this feature.
+
+When someone creates an account, Xythol calls `signInAnonymously()` and then stores their chosen display name, a normalized username, and a label such as `night-owl@xythol` in the protected `profiles` table. The label is only an identity inside Xythol; it is not a deliverable internet email address.
+
+Names are unique by their normalized username. The app rejects a collision instead of silently changing someone's chosen identity.
+
+One important Supabase limitation is intentional: an anonymous user cannot recover the account after signing out, clearing app data, or moving to another device unless they later link a permanent authentication method. This is documented behavior for Supabase anonymous users, so Xythol does not pretend the name itself is a password.
 
 ## Supabase setup
 
