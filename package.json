@@ -49,16 +49,16 @@
     },
     "win": {
       "target": "nsis",
-      "icon": "assets/branding/app-icon.ico"
+      "icon": "assets/branding/app-icon.png"
     },
     "nsis": {
       "oneClick": false,
       "perMachine": false,
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true,
-      "installerIcon": "assets/branding/app-icon.ico",
-      "uninstallerIcon": "assets/branding/app-icon.ico"
+      "installerIcon": "assets/branding/app-icon.png",
+      "uninstallerIcon": "assets/branding/app-icon.png"
     },
-    "icon": "assets/branding/app-icon.ico"
+    "icon": "assets/branding/app-icon.png"
   }
 }
