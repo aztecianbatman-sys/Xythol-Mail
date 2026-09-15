@@ -1,7 +1,59 @@
 {
-  "name":"xythol-mail","version":"0.1.0","description":"Xythol Mail — research-focused private desktop email workspace","main":"electron/main.cjs","type":"module",
-  "scripts":{"dev":"concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && electron electron/main.cjs\"","build":"tsc -b && vite build","start":"electron electron/main.cjs","test":"vitest run","package:win":"npm run build && electron-builder --win"},
-  "dependencies":{"@supabase/supabase-js":"2.57.0","dompurify":"3.2.6","lucide-react":"0.468.0","nodemailer":"7.0.6","react":"19.1.1","react-dom":"19.1.1","zustand":"5.0.8"},
-  "devDependencies":{"@types/dompurify":"3.2.0","@types/node":"24.5.2","@types/react":"19.1.13","@types/react-dom":"19.1.9","@vitejs/plugin-react":"5.0.2","concurrently":"9.2.1","electron":"37.2.6","electron-builder":"26.0.12","typescript":"5.9.2","vite":"7.1.5","vitest":"3.2.4","wait-on":"8.0.4"},
-  "build":{"appId":"com.xythol.mail","productName":"Xythol Mail","files":["dist/**","electron/**","assets/**","package.json"],"directories":{"output":"release"},"win":{"target":"nsis"},"nsis":{"oneClick":false,"perMachine":false,"allowToChangeInstallationDirectory":true,"createDesktopShortcut":true}}
+  "name": "xythol-mail",
+  "version": "0.1.0",
+  "description": "Xythol Mail — research-focused private desktop email workspace",
+  "main": "electron/main.cjs",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && electron electron/main.cjs\"",
+    "build": "tsc --noEmit && vite build",
+    "start": "electron electron/main.cjs",
+    "test": "vitest run",
+    "package:win": "npm run build && electron-builder --win"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.57.0",
+    "dompurify": "3.2.6",
+    "lucide-react": "0.468.0",
+    "nodemailer": "7.0.6",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "zustand": "5.0.8"
+  },
+  "devDependencies": {
+    "@types/dompurify": "3.2.0",
+    "@types/node": "24.5.2",
+    "@types/react": "19.1.13",
+    "@types/react-dom": "19.1.9",
+    "@vitejs/plugin-react": "5.0.2",
+    "concurrently": "9.2.1",
+    "electron": "37.2.6",
+    "electron-builder": "26.0.12",
+    "typescript": "5.9.2",
+    "vite": "7.1.5",
+    "vitest": "3.2.4",
+    "wait-on": "8.0.4"
+  },
+  "build": {
+    "appId": "com.xythol.mail",
+    "productName": "Xythol Mail",
+    "files": [
+      "dist/**",
+      "electron/**",
+      "assets/**",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true
+    }
+  }
 }
