@@ -1,1 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><rect x="56" y="88" width="400" height="300" rx="52" fill="#191821"/><path d="M84 142 256 286 428 142" fill="none" stroke="#fff" stroke-width="26" stroke-linecap="round" stroke-linejoin="round"/><path d="m118 372 118-94M177 393l107-82M237 401l71-55" stroke="#6a59f0" stroke-width="28" stroke-linecap="round"/><path d="m256 176 11 24 24 11-24 11-11 24-11-24-24-11 24-11z" fill="#7b6cff"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+<title>Xythol Mail logo mark</title><desc>A geometric X built from two luminous ribbon strokes.</desc>
+<defs><linearGradient id="g" x1="80" y1="430" x2="430" y2="75" gradientUnits="userSpaceOnUse"><stop stop-color="#6150ff"/><stop offset=".48" stop-color="#6d6aff"/><stop offset="1" stop-color="#53d7ff"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="12" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<rect x="24" y="24" width="464" height="464" rx="108" fill="#10111a"/>
+<g filter="url(#glow)" fill="none" stroke="url(#g)" stroke-width="72" stroke-linecap="round" stroke-linejoin="round">
+<path d="M132 126L256 256L380 386"/>
+<path d="M380 126L256 256L132 386"/>
+</g>
+<circle cx="256" cy="256" r="18" fill="#f8fbff"/>
+</svg>
