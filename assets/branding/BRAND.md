@@ -1,7 +1,9 @@
-# Xythol Mail brand notes
+# Xythol Mail branding
 
-The mark combines a geometric envelope, an internal research/signal spark, and motion lines. The idea is private communication that moves quickly without looking like a generic mail clone.
+The Xythol Mail mark is a geometric X made from two ribbon strokes. The blue-violet-to-cyan gradient is the primary brand treatment.
 
-Keep roughly one quarter of the mark height as clear space around the logo. The mark works best at 16px or larger; the full logo is more comfortable above 64px wide.
+The single source of truth for the desktop app icon is:
+`src-tauri/icons/xythol-mark.svg`
 
-Use logo.svg on light backgrounds, logo-dark.svg when a light mark is needed on dark surfaces, and logo-mark.svg for compact UI. Do not stretch, rotate, or add shadows.
+The full README/marketing lockup is:
+`public/assets/branding/xythol-mail-logo.svg`
