@@ -1,61 +1,26 @@
 {
-  "name": "xythol-mail",
-  "version": "0.1.1",
-  "description": "Xythol Mail — research-focused private desktop email workspace",
-  "main": "electron/main.cjs",
-  "type": "module",
-  "scripts": {
-    "dev": "concurrently -k \"vite --host 127.0.0.1\" \"wait-on http://127.0.0.1:5173 && electron electron/main.cjs\"",
-    "build": "vite build",
-    "start": "electron electron/main.cjs",
-    "test": "vitest run",
-    "package:win": "npm run build && electron-builder --win",
-    "typecheck": "tsc --noEmit"
+  "name":"xythol-mail",
+  "version":"0.2.0",
+  "private":true,
+  "description":"Xythol Mail — a lightweight research-first desktop mail workspace.",
+  "type":"module",
+  "scripts":{
+    "dev":"vite --host 127.0.0.1",
+    "build":"vite build",
+    "typecheck":"tsc --noEmit",
+    "test":"vitest run",
+    "tauri":"tauri",
+    "tauri:dev":"tauri dev",
+    "tauri:build":"tauri build"
   },
-  "dependencies": {
-    "@supabase/supabase-js": "2.57.0",
-    "dompurify": "3.2.6",
-    "lucide-react": "0.468.0",
-    "nodemailer": "7.0.6",
-    "react": "19.1.1",
-    "react-dom": "19.1.1",
-    "zustand": "5.0.8"
+  "dependencies":{
+    "@supabase/supabase-js":"^2.57.0",
+    "@tauri-apps/api":"2.11.1"
   },
-  "devDependencies": {
-    "@types/dompurify": "3.2.0",
-    "@types/node": "24.5.2",
-    "@types/react": "19.1.13",
-    "@types/react-dom": "19.1.9",
-    "@vitejs/plugin-react": "5.0.2",
-    "concurrently": "9.2.1",
-    "electron": "37.2.6",
-    "electron-builder": "26.0.12",
-    "typescript": "5.9.2",
-    "vite": "7.1.5",
-    "vitest": "3.2.4",
-    "wait-on": "8.0.4"
-  },
-  "build": {
-    "appId": "com.xythol.mail",
-    "productName": "Xythol Mail",
-    "files": [
-      "dist/**",
-      "electron/**",
-      "assets/**",
-      "package.json"
-    ],
-    "directories": {
-      "output": "release"
-    },
-    "win": {
-      "target": "nsis",
-      "icon": "assets/branding/app-icon.png"
-    },
-    "nsis": {
-      "oneClick": false,
-      "perMachine": false,
-      "allowToChangeInstallationDirectory": true,
-      "createDesktopShortcut": true
-    }
+  "devDependencies":{
+    "@tauri-apps/cli":"2.11.4",
+    "typescript":"5.9.2",
+    "vite":"7.1.5",
+    "vitest":"3.2.4"
   }
 }
