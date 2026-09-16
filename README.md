@@ -1,142 +1,127 @@
 # Xythol Mail
 
-Xythol Mail is a Windows desktop workspace for people who do a lot of research and then need to turn that research into useful email.
+Xythol Mail is a small desktop email workspace for doing research without constantly jumping between a browser and an email app.
 
-The idea is pretty simple: Research -> Collect -> Organize -> Write -> Review -> Send.
+The project is being rebuilt around Rust + Tauri 2. The old Electron application path has been removed. The goal is a fast desktop shell, a clear mail UI, Supabase for the account/data layer, and Rust for operations such as SMTP sending.
 
-It is built with Electron 37.2.6, React, TypeScript, Vite and Supabase. The browser is integrated into the desktop app using Electron's Chromium engine, so the browser and the research tools can feel like one product instead of two windows stuck together.
+## What the current build does
 
-## What is actually in this repo
+The app starts on a mail-first screen.
 
-The current public build includes a real Electron shell, a secure preload boundary, a Chromium research browser, Supabase anonymous authentication, a Supabase/Postgres schema with ownership-based RLS, local draft persistence, research/contacts data screens, a working SMTP send path, a global Ctrl+K command palette, privacy/settings screens, and the Xythol brand assets. Users can create a name-based Xythol identity without giving the app a real email address or password.
+It has an inbox area, a detailed compose screen, a research desk, contacts/settings placeholders, an anonymous Xythol identity flow, a setup wizard, a button to open the normal Chrome application, and a dedicated Xythol research browser window.
 
-There are intentionally no pretend mailbox rows. Inbox/Sent/Starred/etc. stay empty until a real mailbox provider is configured.
+The UI intentionally does not manufacture fake messages. Mail folders remain empty until a real mailbox synchronization layer exists.
 
-## Run it
+SMTP sending is implemented in Rust with lettre. The frontend passes the request to a Tauri command; Rust validates recipients, builds the message and talks to the SMTP server.
 
-Use Node.js 22+.
+## Why Tauri
 
-    npm install
-    copy .env.example .env.local
-    npm run dev
+The first version used Electron. It worked as a prototype, but the browser/app boundary became too easy to blur and the desktop runtime was heavier than I wanted.
 
-Set these in .env.local:
+This rebuild uses Tauri 2. On Windows, Tauri uses the WebView2 runtime that is already part of the Windows ecosystem instead of shipping a second complete Chromium runtime.
+
+A web page can still use plenty of memory. The point is to keep the Xythol desktop shell itself small.
+
+## Anonymous Xythol accounts
+
+A user chooses a name such as Night Owl.
+
+Supabase Anonymous Sign-Ins create the authenticated user. Xythol then stores the chosen display name, normalized username and an identity label such as night-owl@xythol.
+
+That label belongs to Xythol. It is not a public internet email mailbox.
+
+The anonymous identity migration uses unique indexes so two users cannot silently take the same normalized identity.
+
+Anonymous Supabase accounts do not behave like normal password accounts. Clearing app data or moving to another device can make an anonymous identity unrecoverable unless it is later linked to a permanent authentication method.
+
+## Supabase
+
+Create a Supabase project and put these values in .env.local:
 
     VITE_SUPABASE_URL=https://your-project.supabase.co
     VITE_SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 
-Apply supabase/migrations/202609150001_initial_schema.sql to your Supabase project.
+Enable Anonymous Sign-Ins in Supabase Authentication.
 
-For a production build:
+Apply these migrations:
 
-    npm run build
-    npm start
+    supabase/migrations/202609150001_initial_schema.sql
+    supabase/migrations/202609150002_anonymous_identities.sql
+    supabase/migrations/202609160001_tauri_mail_core.sql
 
-For a Windows installer:
+Do not put a Supabase service-role key in the desktop application.
 
-    npm run package:win
+## Email sending
 
-## Anonymous accounts
+Compose has an explicit SMTP section.
 
-Xythol uses Supabase Anonymous Sign-Ins for its no-email account flow. In the Supabase dashboard, enable the Anonymous provider under Authentication > Providers before testing this feature.
+The current send path supports SMTP host, port, username, password, From address, STARTTLS and TLS.
 
-When someone creates an account, Xythol calls `signInAnonymously()` and then stores their chosen display name, a normalized username, and a label such as `night-owl@xythol` in the protected `profiles` table. The label is only an identity inside Xythol; it is not a deliverable internet email address.
+The password is passed to the Rust command for the send and is not stored in Supabase by this build.
 
-Names are unique by their normalized username. The app rejects a collision instead of silently changing someone's chosen identity.
-
-One important Supabase limitation is intentional: an anonymous user cannot recover the account after signing out, clearing app data, or moving to another device unless they later link a permanent authentication method. This is documented behavior for Supabase anonymous users, so Xythol does not pretend the name itself is a password.
-
-## Supabase setup
-
-Supabase is the cloud account/data layer. The app expects a publishable key in the client, not a secret/service-role key. The migration creates the core tables and enables RLS everywhere user-owned data is stored.
-
-The RLS rules use the authenticated user's auth.uid() and keep child records tied to a user-owned parent where needed. Do not remove those checks just to make a query return data.
-
-New Supabase projects no longer automatically expose newly created public tables through the Data API, so the migration includes explicit authenticated-role grants. RLS still decides which rows the user can see.
-
-## Mail providers
-
-The application is structured so the rest of the UI can eventually consume a normalized provider adapter:
-
-- Gmail
-- Outlook
-- IMAP
-- SMTP
-
-Gmail and Outlook need their own OAuth application registration, redirect configuration and permissions. Those credentials cannot be invented inside this repository.
-
-SMTP sending is real today. The compose screen passes connection details to the Electron main process, which verifies the SMTP connection and sends through Nodemailer. A successful send is only shown after the transport accepts the message.
-
-## Browser
-
-The research browser is a real Chromium view (WebContentsView), not an iframe pretending to be a browser.
-
-Website content runs separately from the application renderer. It does not receive the Xythol preload bridge. Navigation is restricted to HTTP(S), pop-up windows are explicitly handled, and browser permissions are denied by default in this first build.
-
-The browser is still a normal browser from the website's point of view. A site may receive the normal browser information that sites usually receive.
+Gmail and Outlook OAuth are not faked. Their adapters need real provider application registration, redirects and permissions.
 
 ## Research
 
-Research sessions live in Supabase once signed in.
+Research is meant to sit next to the email workflow.
 
-A session is meant to hold sources, notes and the final draft relationship. The browser exposes two explicit capture actions:
+The current build provides a research desk and can open a dedicated Tauri webview window for research.
 
-- Save source
-- Save selection
+The Open Chrome button launches the normal Chrome application when Xythol can find it on Windows.
 
-A source save captures page metadata. A selection save captures the user's selected text. Xythol does not silently scrape an entire website.
+## Build locally
 
-## Privacy
+You need Node.js 22+, Rust stable, the Tauri prerequisites for your operating system, and WebView2 on Windows.
 
-The Privacy Center exists because "private" should mean something concrete.
+Run:
 
-Local information can include the Chromium profile, cookies/site data and unsynced drafts.
-
-Cloud information can include your Xythol account and the data you explicitly sync to Supabase.
-
-The project does not describe itself as unhackable, anonymous, military-grade, or 100% secure. Those would be dishonest claims.
-
-## Performance
-
-The UI is deliberately light on animation and heavy visual effects. Lists are kept simple and the browser is kept outside the React tree as a native Chromium view.
-
-There is no fixed RAM promise because Chromium memory use depends on the web pages you open, the number of tabs, and the rest of your machine.
-
-## Tests
-
+    npm install
+    npm run typecheck
+    npm run build
     npm test
+    npm run tauri:dev
 
-There are basic unit tests for search/validation in the development workspace. RLS should also be tested against a real Supabase project with separate users before production use.
+Create a Windows installer with:
+
+    npm run tauri:build
+
+## GitHub Actions
+
+The desktop build workflow is .github/workflows/tauri.yml.
+
+It installs Node and Rust, typechecks the frontend, builds the frontend, runs tests, generates Tauri icons, builds the Windows NSIS installer, and uploads that installer as an Actions artifact.
+
+It does not automatically create a GitHub release. The first Tauri installer should be tested before making another public release.
 
 ## Project layout
 
     xythol-mail/
-    ├─ electron/
-    │  ├─ main.cjs
-    │  └─ preload.cjs
     ├─ src/
-    │  ├─ App.tsx
-    │  ├─ main.tsx
-    │  ├─ supabase.ts
-    │  └─ styles.css
+    │  ├─ main.ts
+    │  ├─ styles.css
+    │  └─ vite-env.d.ts
+    ├─ src-tauri/
+    │  ├─ Cargo.toml
+    │  ├─ build.rs
+    │  ├─ tauri.conf.json
+    │  ├─ src/
+    │  │  ├─ lib.rs
+    │  │  └─ main.rs
+    │  └─ icons/
+    ├─ public/
+    │  └─ assets/
     ├─ supabase/
     │  └─ migrations/
-    ├─ assets/
-    │  └─ branding/
     └─ tests/
 
-## Current limits
+## Development notes
 
-This is a serious starting point, not a claim that every external provider feature already has a working production credential flow.
+This rebuild keeps the frontend deliberately small instead of starting with a huge UI framework.
 
-Mailbox sync, Gmail/Outlook OAuth completion, scheduled sending, full offline conflict resolution, and destructive account deletion still need their provider/server-side setup and additional implementation. Those areas are intentionally visible in the product instead of being hidden behind fake success messages.
+The research browser is a separate Tauri window, so a web page does not replace the mail application's main window.
 
-That rule matters to this project: a button should either do the thing, or tell you why it cannot yet.
-
-## Branding
-
-The custom Xythol Mail logo combines a geometric envelope, a signal/spark and motion lines. Vector variants are in assets/branding/, with basic usage notes in assets/branding/BRAND.md.
+The project also avoids impossible security claims. It is not advertised as unhackable, anonymous internet browsing, or private from websites.
 
 ## License
 
-No license has been selected yet. If this repo is going to be redistributed, add the license you actually want instead of assuming one.
+No license has been selected yet.
