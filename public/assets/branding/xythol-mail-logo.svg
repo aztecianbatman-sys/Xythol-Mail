@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" role="img" aria-labelledby="title desc">
+<title>Xythol Mail</title><desc>Research Smarter. Communicate Freely.</desc>
+<defs><linearGradient id="g" x1="120" y1="300" x2="420" y2="80" gradientUnits="userSpaceOnUse"><stop stop-color="#6150ff"/><stop offset=".48" stop-color="#6d6aff"/><stop offset="1" stop-color="#53d7ff"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="8" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+<rect width="1200" height="420" rx="36" fill="#0d0f17"/>
+<g transform="translate(52 45)" filter="url(#glow)" fill="none" stroke="url(#g)" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"><path d="M80 55L180 155L280 255"/><path d="M280 55L180 155L80 255"/></g>
+<circle cx="232" cy="200" r="11" fill="#f8fbff"/>
+<text x="390" y="180" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="82" font-weight="700" letter-spacing="14" fill="#f7f8ff">XYTHOL</text>
+<text x="394" y="254" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="58" font-weight="700" letter-spacing="18" fill="url(#g)">MAIL</text>
+<text x="394" y="315" font-family="Inter,Segoe UI,Arial,sans-serif" font-size="25" letter-spacing="4" fill="#aeb4c9">Research Smarter. Communicate Freely.</text>
+</svg>
