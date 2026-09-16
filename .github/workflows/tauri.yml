@@ -1,0 +1,48 @@
+name: Xythol Mail Tauri build
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: xythol-tauri-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Rust stable
+        uses: dtolnay/rust-toolchain@stable
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: "src-tauri -> target"
+      - name: Install frontend dependencies
+        run: npm install
+      - name: Typecheck
+        run: npm run typecheck
+      - name: Build frontend
+        run: npm run build
+      - name: Test
+        run: npm test
+      - name: Generate Tauri icons
+        run: npx tauri icon src-tauri/icons/xythol.svg
+      - name: Build Windows installer
+        run: npm run tauri:build
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: xythol-mail-tauri-windows
+          path: src-tauri/target/release/bundle/nsis/*-setup.exe
+          if-no-files-found: error
